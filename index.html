@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Wonderlands Skill Calculator</title>
+	<link href="favicon-32x32.png" rel="icon" type="image/png" sizes="32x32">
+	<link href="favicon-16x16.png" rel="icon" type="image/png" sizes="16x16">
+	<link href="favicon.ico" rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48">
+	<link href="main.css" rel="stylesheet" type="text/css">
+	<link href="https://fonts.googleapis.com/css?family=Homenaje" rel="stylesheet" type="text/css">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet" type="text/css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+	<div id="header">
+		<h1><a href="#" target="_blank">Wonderlands Skill Calculator</a><div class="stamp">&nbsp;(WIP)</div></h1>
+		<h2 class="hidden">Level <span id="charLevel">1</span> <span id="multiClassName">None</span></h2>
+	</div>
+	<div id="overlayContainer">
+		<div id="errorMessage">You need to enable Javascript.</div>
+		<div id="heroStats" class="hidden">
+			<span class="heroStatLabel">力量:</span>
+			<input class="heroStatSlider" type="range" min="10" max="30" value="10" id="strengthSlider">
+			<span class="heroStatNumber" id="strengthNumber">10 </span><br>
+			<span class="heroStatText" id="strengthText">(+0.0% 暴击伤害)</span>
+
+			<span class="heroStatLabel">敏捷:</span>
+			<input class="heroStatSlider" type="range" min="10" max="30" value="10" id="dexteritySlider">
+			<span class="heroStatNumber" id="dexterityNumber">10</span><br>
+			<span class="heroStatText" id="dexterityText">(+0.0% 暴击几率)</span>
+
+			<span class="heroStatLabel">智力:</span>
+			<input class="heroStatSlider" type="range" min="10" max="30" value="10" id="intelligenceSlider">
+			<span class="heroStatNumber" id="intelligenceNumber">10</span><br>
+			<span class="heroStatText" id="intelligenceText">(+0.0% 法术冷却速率)</span>
+
+			<span class="heroStatLabel">智慧:</span>
+			<input class="heroStatSlider" type="range" min="10" max="30" value="10" id="wisdomSlider">
+			<span class="heroStatNumber" id="wisdomNumber">10</span><br>
+			<span class="heroStatText" id="wisdomText">(+0.0% 状态效果伤害)</span>
+
+			<span class="heroStatLabel">体格:</span>
+			<input class="heroStatSlider" type="range" min="10" max="30" value="10" id="constitutionSlider">
+			<span class="heroStatNumber" id="constitutionNumber">10</span><br>
+			<span class="heroStatText" id="constitutionText">(+0.0% 最大生命值/护盾)</span>
+
+			<span class="heroStatLabel">协调:</span>
+			<input class="heroStatSlider" type="range" min="10" max="30" value="10" id="attunementSlider">
+			<span class="heroStatNumber" id="attunementNumber">10</span><br>
+			<span class="heroStatText" id="attunementText">(+0.0% 主动技能冷却速率)</span>
+			
+			<span id="heroPointsLabel">英雄点:</span>
+			<span id="heroPointsText">0/10</span>
+
+			<span id="backstoryLabel">角色出身:</span>
+			<select id="backstorySelector">
+				<option value="none">无</option>
+				<option value="thicc">村头白痴 (+8 力量, -3 智力)</option>
+				<option value="nimble">精灵抚养 (+2 敏捷, -4 体格)</option>
+				<option value="nerd">失败僧侣 (-4 力量, -2 敏捷, +2 智力, +4 智慧)</option>
+				<option value="packrat">满载囤积者 (-2 敏捷, +2 智力, -2 体格, +5 协调)</option>
+				<option value="savvy">侠盗炼金师 (-2 敏捷, +8 智慧, -5 体格)</option>
+			</select>
+		</div>
+	</div>
+	<div id="actionSkills">
+		<div id="primaryActionSkills"></div>
+		<div id="secondaryActionSkills"></div>
+	</div>
+	<div id="skillTrees">
+		<div id="primaryTree"></div>
+		<div id="secondaryTree"></div>
+	</div>
+	<div id="classSelectors">
+		<select id="primaryClassSelector">
+			<option value="none">无</option>
+			<option value="brrzerker">霜战士</option>
+			<option value="clawbringer">利爪突袭者</option>
+			<option value="graveborn">坟墓之子</option>
+			<option value="spellshot">妖术金枪客</option>
+			<option value="sporewarden">孢子游侠</option>
+			<option value="stabbomancer">刀剑术士</option>
+		</select>
+		<button id="swapTreeButton" type="button">切换</button>
+		<select id="secondaryClassSelector">
+			<option value="none">无</option>
+			<option value="brrzerker">霜战士</option>
+			<option value="clawbringer">利爪突袭者</option>
+			<option value="graveborn">坟墓之子</option>
+			<option value="spellshot">妖术金枪客</option>
+			<option value="sporewarden">孢子游侠</option>
+			<option value="stabbomancer">刀剑术士</option>
+		</select>
+	</div>
+	<div id="extraButtons">
+		<button id="resetButton" type="button">重置</option>
+		<button id="switchViewButton" type="button">查看英雄点</button>
+		<button id="screenshotButton" type="button">截图</button>
+		<button id="undoButton" type="button">撤回</button>
+	</div>
+	<div id="summaryContainer">
+		<h2 id="featSummaryHeader"></h2>
+		<div id="featSummaryContainer">
+			<div id="primaryClassFeat"></div>
+			<div id="secondaryClassFeat"></div>
+		</div>
+		<div id="summarySpacer" class="disabled"></div>
+		<h2 id="skillSummaryHeader"></h2>
+		<div id="skillSummaryContainer"></div>
+		<div id="footer">Art &copy; 2022 <a href="https://gearboxsoftware.com">Gearbox Software</a>. Website by <a href="https://discord.gg/wonderlands">Lothrik (MaXiMiUS)#1560</a>. <a href="https://github.com/lothrik/wonderlands-skill-calc">Source Code</a>.</div>
+	</div>
+	<script src="main.js"></script>
+</body>
+</html>
