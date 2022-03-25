@@ -1,2 +1,2 @@
-# wonderlands-skill-calc
+# Wonderlands-Skill-Calc
  
